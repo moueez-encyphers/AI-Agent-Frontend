@@ -56,6 +56,7 @@
         width: 28px;
         height: 28px;
         fill: white;
+        overflow: visible;
       }
       
       #livekit-widget-button.connected {
