@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded LiveKit Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #2c2c2c;
+            padding-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to My Website</h1>
+    <p>This page embeds the LiveKit AI Agent widget.</p>
+
+    <!-- Embed your widget -->
+    <script>
+        window.LiveKitWidgetConfig = {
+            baseUrl: 'http://127.0.0.1:5030'
+        };
+    </script>
+    <script src="http://127.0.0.1:5030/widget.js" allow="microphone; autoplay">
+    </script>
+</body>
+
+</html>

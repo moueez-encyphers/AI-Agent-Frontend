@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Flask Calling Agent</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #292929;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        window.LiveKitWidgetConfig = {
+            baseUrl: 'http://127.0.0.1:5030'
+        };
+    </script>
+    <script src="http://127.0.0.1:5030/widget.js" allow="microphone; autoplay"></script>
+</body>
+
+</html>
