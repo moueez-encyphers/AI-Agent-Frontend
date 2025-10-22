@@ -110,7 +110,7 @@ def get_token():
         # Case 1: Allowed production Origin (e.g. your WordPress site)
         (origin in ALLOWED_ORIGINS)
         # Case 2: Allowed Host (your Vercel app)
-        or (host in allowed_hosts)
+        or (not origin and host in allowed_hosts)
         # Case 3: Local development (when no Origin header)
         or (not origin and (request.host.startswith("127.0.0.1")))
         # Case 4: Postman or backend requests with API key
