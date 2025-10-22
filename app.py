@@ -21,7 +21,7 @@ app = Flask(__name__)
 # Enable CORS for all routes - CRITICAL for widget embedding
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://pink-raccoon-371159.hostingersite.com"],
+        "origins": ["https://pink-raccoon-371159.hostingersite.com", "http://localhost:5010"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
@@ -119,7 +119,7 @@ def get_token():
         print(f"❌ Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}")
         return jsonify({
             "success": False,
-            "error": "Unauthorized origin or missing API key"
+            "error": f"Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}"
         }), 403
 
     try:
