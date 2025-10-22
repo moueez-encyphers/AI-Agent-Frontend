@@ -87,12 +87,12 @@ def get_token():
     """Generate a token for widget users"""
 
     # Handle preflight CORS request
-    if request.method == 'OPTIONS':
-        response = jsonify({'status': 'ok'})
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        return response, 200
+    # if request.method == 'OPTIONS':
+    #     response = jsonify({'status': 'ok'})
+    #     response.headers['Access-Control-Allow-Origin'] = '*'
+    #     response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    #     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    #     return response, 200
 
     try:
         # Get parameters
@@ -115,7 +115,7 @@ def get_token():
         print(f"🎫 Token generated: {identity} -> {room}")
 
         response = jsonify(response_data)
-        response.headers['Access-Control-Allow-Origin'] = '*'
+        # response.headers['Access-Control-Allow-Origin'] = '*'
         return response
 
     except Exception as e:
@@ -125,7 +125,7 @@ def get_token():
             "error": str(e),
             "message": "Failed to generate token"
         })
-        error_response.headers['Access-Control-Allow-Origin'] = '*'
+        # error_response.headers['Access-Control-Allow-Origin'] = '*'
         return error_response, 500
 
 
@@ -144,14 +144,14 @@ def health():
 @app.errorhandler(404)
 def not_found(e):
     response = jsonify({'error': 'Not found'})
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Origin'] = '*'
     return response, 404
 
 
 @app.errorhandler(500)
 def internal_error(e):
     response = jsonify({'error': 'Internal server error'})
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Origin'] = '*'
     return response, 500
 
 
