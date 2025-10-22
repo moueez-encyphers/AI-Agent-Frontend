@@ -12,13 +12,15 @@ load_dotenv()
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
 LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
 
 app = Flask(__name__, static_folder='public', template_folder='templates')
 
 # Enable CORS for all routes - CRITICAL for widget embedding
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://pink-raccoon-371159.hostingersite.com"],
+        "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
@@ -87,12 +89,37 @@ def get_token():
     """Generate a token for widget users"""
 
     # Handle preflight CORS request
-    # if request.method == 'OPTIONS':
-    #     response = jsonify({'status': 'ok'})
-    #     response.headers['Access-Control-Allow-Origin'] = '*'
-    #     response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    #     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    #     return response, 200
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response, 200
+
+    origin = request.headers.get("Origin")
+    api_key = request.headers.get("X-API-Key")
+
+    # 1️⃣ Allow calls from trusted browser origins
+    allowed = False
+    if origin in ALLOWED_ORIGINS:
+        allowed = True
+
+    # 2️⃣ Allow Postman/curl only if they include a valid key
+    elif api_key == SECRET_KEY:
+        allowed = True
+
+    # 🧠 Allow local development calls (no origin header)
+    elif (not origin and
+          (request.host.startswith("127.0.0.1") or
+           request.host.startswith("localhost"))):
+        allowed = True
+
+    if not allowed:
+        print(f"❌ Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}")
+        return jsonify({
+            "success": False,
+            "error": "Unauthorized origin or missing API key"
+        }), 403
 
     try:
         # Get parameters
