@@ -21,11 +21,12 @@ app = Flask(__name__)
 # Enable CORS for all routes - CRITICAL for widget embedding
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://pink-raccoon-371159.hostingersite.com", "http://localhost:5010"],
+        "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
 })
+# "origins": ["https://pink-raccoon-371159.hostingersite.com", "http://127.0.0.1:5010"]
 
 
 def make_token(identity: str, room: str, permissions: dict = None) -> str:
