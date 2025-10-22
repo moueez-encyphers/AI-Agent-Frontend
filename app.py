@@ -25,6 +25,7 @@ CORS(app, resources={
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
+})
 
 
 def make_token(identity: str, room: str, permissions: dict = None) -> str:
