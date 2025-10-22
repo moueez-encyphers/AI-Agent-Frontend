@@ -100,51 +100,49 @@ def get_token():
 
     origin = request.headers.get("Origin")
     api_key = request.headers.get("X-API-Key")
-    host = request.headers.get("Host")
-    user_agent = request.headers.get("User-Agent", "").lower()
+    # host = request.headers.get("Host")
+    # user_agent = request.headers.get("User-Agent", "").lower()
 
-    allowed_hosts = [
-        "ai-agent-frontend-coral.vercel.app",
-    ]
+    # allowed_hosts = [
+    #     "ai-agent-frontend-coral.vercel.app",
+    # ]
 
-    is_browser = bool(origin) or ("mozilla" in user_agent or "chrome" in user_agent)
+    # is_browser = bool(origin) or ("mozilla" in user_agent or "chrome" in user_agent)
 
-    if (
-        # Case 1: Allowed production Origin (e.g. your WordPress site)
-        (origin in ALLOWED_ORIGINS)
-        # Case 2: Allowed Host (your Vercel app)
-        or (not origin and host in allowed_hosts and is_browser)
-        # Case 3: Local development (when no Origin header)
-        or (not origin and (request.host.startswith("127.0.0.1")))
-        # Case 4: Postman or backend requests with API key
-        or (api_key == SECRET_KEY)
-    ):
-        print(f"✅ Authorized | Origin: {origin} | Host: {host}")
-    else:
-        print(f"❌ Unauthorized | Origin: {origin} | Host: {host} | API: {api_key}")
-        return jsonify({"error": "Unauthorized origin or missing API key"}), 403
+    # if (
+    #     # Case 1: Allowed production Origin (e.g. your WordPress site)
+    #     (origin in ALLOWED_ORIGINS)
+    #     # Case 2: Allowed Host (your Vercel app)
+    #     or (not origin and host in allowed_hosts and is_browser)
+    #     # Case 3: Local development (when no Origin header)
+    #     or (not origin and (request.host.startswith("127.0.0.1")))
+    #     # Case 4: Postman or backend requests with API key
+    #     or (api_key == SECRET_KEY)
+    # ):
+    #     print(f"✅ Authorized | Origin: {origin} | Host: {host}")
+    # else:
+    #     print(f"❌ Unauthorized | Origin: {origin} | Host: {host} | API: {api_key}")
+    #     return jsonify({"error": "Unauthorized origin or missing API key"}), 403
 
-    # # 1️⃣ Allow calls from trusted browser origins
-    # allowed = False
-    # if origin in ALLOWED_ORIGINS:
-    #     allowed = True
+    # 1️ Allow calls from trusted browser origins
+    allowed = False
+    if origin in ALLOWED_ORIGINS:
+        allowed = True
 
-    # # 2️⃣ Allow Postman/curl only if they include a valid key
-    # elif api_key == SECRET_KEY:
-    #     allowed = True
+    # 2️ Allow Postman/curl only if they include a valid key
+    elif api_key == SECRET_KEY:
+        allowed = True
 
-    # # 🧠 Allow local development calls (no origin header)
-    # elif (not origin and
-    #       (request.host.startswith("127.0.0.1") or
-    #        request.host.startswith("localhost"))):
-    #     allowed = True
+    # Allow local development calls (no origin header)
+    elif (not origin and (request.host.startswith("127.0.0.1"))):
+        allowed = True
 
-    # if not allowed:
-    #     print(f"❌ Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}")
-    #     return jsonify({
-    #         "success": False,
-    #         "error": f"Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}"
-    #     }), 403
+    if not allowed:
+        print(f"❌ Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}")
+        return jsonify({
+            "success": False,
+            "error": f"Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}"
+        }), 403
 
     try:
         # Get parameters
@@ -168,9 +166,8 @@ def get_token():
 
         response = jsonify(response_data)
         # response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
         return response
 
     except Exception as e:
