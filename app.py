@@ -100,28 +100,48 @@ def get_token():
 
     origin = request.headers.get("Origin")
     api_key = request.headers.get("X-API-Key")
+    host = request.headers.get("Host")
 
-    # 1️⃣ Allow calls from trusted browser origins
-    allowed = False
-    if origin in ALLOWED_ORIGINS:
-        allowed = True
+    allowed_hosts = [
+        "ai-agent-frontend-coral.vercel.app",
+    ]
 
-    # 2️⃣ Allow Postman/curl only if they include a valid key
-    elif api_key == SECRET_KEY:
-        allowed = True
+    if (
+        # Case 1: Allowed production Origin (e.g. your WordPress site)
+        (origin in ALLOWED_ORIGINS)
+        # Case 2: Allowed Host (your Vercel app)
+        or (host in allowed_hosts)
+        # Case 3: Local development (when no Origin header)
+        or (not origin and (request.host.startswith("127.0.0.1")))
+        # Case 4: Postman or backend requests with API key
+        or (api_key == SECRET_KEY)
+    ):
+        print(f"✅ Authorized | Origin: {origin} | Host: {host}")
+    else:
+        print(f"❌ Unauthorized | Origin: {origin} | Host: {host} | API: {api_key}")
+        return jsonify({"error": "Unauthorized origin or missing API key"}), 403
 
-    # 🧠 Allow local development calls (no origin header)
-    elif (not origin and
-          (request.host.startswith("127.0.0.1") or
-           request.host.startswith("localhost"))):
-        allowed = True
+    # # 1️⃣ Allow calls from trusted browser origins
+    # allowed = False
+    # if origin in ALLOWED_ORIGINS:
+    #     allowed = True
 
-    if not allowed:
-        print(f"❌ Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}")
-        return jsonify({
-            "success": False,
-            "error": f"Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}"
-        }), 403
+    # # 2️⃣ Allow Postman/curl only if they include a valid key
+    # elif api_key == SECRET_KEY:
+    #     allowed = True
+
+    # # 🧠 Allow local development calls (no origin header)
+    # elif (not origin and
+    #       (request.host.startswith("127.0.0.1") or
+    #        request.host.startswith("localhost"))):
+    #     allowed = True
+
+    # if not allowed:
+    #     print(f"❌ Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}")
+    #     return jsonify({
+    #         "success": False,
+    #         "error": f"Unauthorized request | Origin: {origin} | API Key: {api_key} | Host: {request.host}"
+    #     }), 403
 
     try:
         # Get parameters
