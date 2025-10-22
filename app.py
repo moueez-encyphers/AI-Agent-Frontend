@@ -18,7 +18,7 @@ app = Flask(__name__, static_folder='public', template_folder='templates')
 # Enable CORS for all routes - CRITICAL for widget embedding
 CORS(app, resources={
     r"/*": {
-        "origins": "*",
+        "origins": ["https://pink-raccoon-371159.hostingersite.com"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }

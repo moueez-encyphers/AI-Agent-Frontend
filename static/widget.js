@@ -512,21 +512,6 @@
                 });
             });
 
-            // Listen for transcriptions
-            // const shownSegments = new Set();
-
-            // room.on('transcriptionReceived', (segments, participant) => {
-            //     // console.log("🔊 Transcription from:", participant.identity, participant.isLocal, segments);
-            //     const isAgent = !participant.isLocal;  // true for remote participant
-            //     for (const s of segments) {
-            //         const key = `${participant.identity}:${s.text}`;
-            //         if (shownSegments.has(key)) continue;     // skip duplicates
-            //         shownSegments.add(key);
-            //         // log(`Transcription from ${participant.identity}: ${s.text} (final: ${s.final})`);
-            //         addMessage(s.text, isAgent, s.final);
-            //     }
-            // });
-
             // Connect to room
             await room.connect(data.url, data.token);
 
