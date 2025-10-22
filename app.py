@@ -14,17 +14,17 @@ LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
 LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+print(f"Allowed Origins: {ALLOWED_ORIGINS}")
 
-app = Flask(__name__, static_folder='public', template_folder='templates')
+app = Flask(__name__)
 
 # Enable CORS for all routes - CRITICAL for widget embedding
 CORS(app, resources={
     r"/*": {
-        "origins": ALLOWED_ORIGINS,
+        "origins": ["https://pink-raccoon-371159.hostingersite.com"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
-})
 
 
 def make_token(identity: str, room: str, permissions: dict = None) -> str:
