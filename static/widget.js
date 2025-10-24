@@ -269,6 +269,33 @@
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
+
+      .widget-indicator {
+          position: fixed;
+          bottom: 100px;
+          right: 20px;
+          background: rgba(102, 126, 234, 0.95);
+          color: white;
+          padding: 15px 25px;
+          border-radius: 30px;
+          font-size: 14px;
+          font-weight: 600;
+          animation: bounce 2s infinite;
+          pointer-events: none;
+          z-index: 0;
+      }
+
+      @keyframes bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+      }
       
       @media (max-width: 480px) {
         #livekit-widget-popup {
@@ -287,6 +314,10 @@
         const container = document.createElement('div');
         container.id = 'livekit-widget-container';
         container.innerHTML = `
+      <!-- Widget indicator -->
+      <div class="widget-indicator">
+        TAP 👇
+      </div>
       <button id="livekit-widget-button" aria-label="Open voice assistant">
         <svg viewBox="0 0 24 24">
           <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>

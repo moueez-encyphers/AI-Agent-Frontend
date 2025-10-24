@@ -26,7 +26,6 @@ CORS(app, resources={
         "allow_headers": ["Content-Type"]
     }
 })
-# "origins": ["https://pink-raccoon-371159.hostingersite.com", "http://127.0.0.1:5010"]
 
 
 def make_token(identity: str, room: str, permissions: dict = None) -> str:
@@ -38,7 +37,7 @@ def make_token(identity: str, room: str, permissions: dict = None) -> str:
     token.with_identity(identity).with_name(identity)
 
     # Set expiration
-    token.with_ttl(timedelta(hours=6))
+    token.with_ttl(timedelta(hours=1))
 
     # Configure permissions
     default_permissions = {
@@ -100,29 +99,6 @@ def get_token():
 
     origin = request.headers.get("Origin")
     api_key = request.headers.get("X-API-Key")
-    # host = request.headers.get("Host")
-    # user_agent = request.headers.get("User-Agent", "").lower()
-
-    # allowed_hosts = [
-    #     "ai-agent-frontend-coral.vercel.app",
-    # ]
-
-    # is_browser = bool(origin) or ("mozilla" in user_agent or "chrome" in user_agent)
-
-    # if (
-    #     # Case 1: Allowed production Origin (e.g. your WordPress site)
-    #     (origin in ALLOWED_ORIGINS)
-    #     # Case 2: Allowed Host (your Vercel app)
-    #     or (not origin and host in allowed_hosts and is_browser)
-    #     # Case 3: Local development (when no Origin header)
-    #     or (not origin and (request.host.startswith("127.0.0.1")))
-    #     # Case 4: Postman or backend requests with API key
-    #     or (api_key == SECRET_KEY)
-    # ):
-    #     print(f"✅ Authorized | Origin: {origin} | Host: {host}")
-    # else:
-    #     print(f"❌ Unauthorized | Origin: {origin} | Host: {host} | API: {api_key}")
-    #     return jsonify({"error": "Unauthorized origin or missing API key"}), 403
 
     # 1️ Allow calls from trusted browser origins
     allowed = False
@@ -158,7 +134,7 @@ def get_token():
             "token": token,
             "room": room,
             "identity": identity,
-            "expires_in": "6 hours",
+            "expires_in": "1 hours",
             "generated_at": datetime.now().isoformat()
         }
 
